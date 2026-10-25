@@ -1,4 +1,4 @@
-package displays;
+package infrastructure;
 
 public class HistoryDisplay {
 }

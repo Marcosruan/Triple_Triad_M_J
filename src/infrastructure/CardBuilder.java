@@ -1,4 +1,4 @@
-package external_resources;
+package infrastructure;
 
 public class CardBuilder {
 }

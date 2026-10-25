@@ -1,4 +1,4 @@
-package models;
+package domain.entities;
 
 public class BattleEvent {
 }
