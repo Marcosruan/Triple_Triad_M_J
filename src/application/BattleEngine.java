@@ -2,7 +2,6 @@ package application;
 
 import domain.entities.BattleEvent;
 import domain.entities.CardState;
-import domain.enums.ElementType;
 import domain.enums.EventType;
 
 import java.util.Arrays;
@@ -27,12 +26,13 @@ public class BattleEngine {
         if (isFree(position)) {
             matrix[l][c] = card;
             boolean flipped = compareRanks(l, c);
-            boolean ascension = compareElements(card.getElement());
             boolean same = manageSame(l, c);
-            BattleEvent[] events = new BattleEvent[2];
+            boolean ascension = compareElements(card);
+            BattleEvent[] events = new BattleEvent[3];
 
-            if (flipped || same) events[0] = new BattleEvent(EventType.FLIPPED);
-            if (ascension) events[1] = new BattleEvent(EventType.BONUS);
+            events[0] = new BattleEvent(EventType.PLACED, matrix);
+            if (flipped || same) events[1] = new BattleEvent(EventType.FLIPPED);
+            if (ascension) events[2] = new BattleEvent(EventType.BONUS);
             verifyOver();
             return events;
         }
@@ -102,11 +102,13 @@ public class BattleEngine {
                         if (!sameSide) {
                             leftCard.setSide(currentCard.getSide());
                             flipped = true;
+                            same = true;
                         }
                     }
                     if (sameRight(l, c, c + 1)) {
                         if (!sameSide && !flipped) {
                             leftCard.setSide(currentCard.getSide());
+                            same = true;
                         }
                     }
                     return same;
@@ -121,13 +123,10 @@ public class BattleEngine {
             if (matrix[l][nc] != null) {
                 CardState currentCard = matrix[l][c];
                 CardState leftCard = matrix[l][nc];
-                boolean sameSide = leftCard.getSide() == currentCard.getSide();
 
                 if (currentCard.getRanks()[LEFT] == leftCard.getRanks()[RIGHT]) {
-                    if (!sameSide) {
-                        leftCard.setSide(currentCard.getSide());
-                        return true;
-                    }
+                    leftCard.setSide(currentCard.getSide());
+                    return true;
                 }
             }
         }
@@ -139,13 +138,10 @@ public class BattleEngine {
             if (matrix[l][nc] != null) {
                 CardState currentCard = matrix[l][c];
                 CardState rightCard = matrix[l][nc];
-                boolean sameSide = rightCard.getSide() == currentCard.getSide();
 
                 if (currentCard.getRanks()[RIGHT] == rightCard.getRanks()[LEFT]) {
-                    if (!sameSide) {
-                        rightCard.setSide(currentCard.getSide());
-                        return true;
-                    }
+                    rightCard.setSide(currentCard.getSide());
+                    return true;
                 }
             }
         }
@@ -177,13 +173,10 @@ public class BattleEngine {
             if (matrix[nl][c] != null) {
                 CardState currentCard = matrix[l][c];
                 CardState belowCard = matrix[nl][c];
-                boolean sameSide = belowCard.getSide() == currentCard.getSide();
 
                 if (currentCard.getRanks()[DOWN] == belowCard.getRanks()[UP]) {
-                    if (!sameSide) {
-                        belowCard.setSide(currentCard.getSide());
-                        return true;
-                    }
+                    belowCard.setSide(currentCard.getSide());
+                    return true;
                 }
             }
         }
@@ -253,16 +246,19 @@ public class BattleEngine {
         return false;
     }
 
-    private boolean compareElements(ElementType element) {
+    private boolean compareElements(CardState currentCard) {
         boolean applied = false;
         for (CardState[] line : matrix) {
             for (CardState card: line) {
-                if (card != null && card.getElement() == element) {
-                    card.setBonus(); //ascension
-                    applied = true;
+                if (card != null && card.getId() != currentCard.getId()) {
+                    if (card.getElement() == currentCard.getElement()) {
+                        card.setBonus(); //ascension
+                        applied = true;
+                    }
                 }
             }
         }
+        if (applied) currentCard.setBonus();
         return applied;
     }
 
@@ -289,8 +285,10 @@ public class BattleEngine {
         int cont = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (matrix[i][j].getSide() == side) {
-                    cont++;
+                if (matrix[i][j] != null) {
+                    if (matrix[i][j].getSide() == side) {
+                        cont++;
+                    }
                 }
             }
         }
