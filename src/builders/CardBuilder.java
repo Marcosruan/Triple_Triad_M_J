@@ -25,7 +25,7 @@ public class CardBuilder {
                 String[] data = line.split(delimiter);
 
                 int id = Integer.parseInt(data[0].trim());
-                String name = data[1].trim();
+                String name = data[1].trim().replaceAll("^\"|\"$", "");
 
                 int[] ranks = parseRanks(data[2]);
 
