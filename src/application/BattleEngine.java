@@ -4,7 +4,9 @@ import domain.entities.BattleEvent;
 import domain.entities.CardState;
 import domain.enums.EventType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BattleEngine {
     private final int UP = 0;
@@ -46,148 +48,48 @@ public class BattleEngine {
     }
 
     private boolean manageSame(int l, int c) {
-        if (manageSameUp(l, c, l - 1)) return true;
-        if (manageSameLeft(l, c, c - 1)) return true;
-        return manageSameDown(l, c, l + 1);
-    }
-
-    private boolean manageSameUp(int l, int c, int nl) {
-        if (nl >= 0) {
-            if (matrix[nl][c] != null) {
-                boolean flipped = false;
-                boolean same = false;
-                CardState currentCard = matrix[l][c];
-                CardState aboveCard = matrix[nl][c];
-                boolean sameSide = aboveCard.getSide() == currentCard.getSide();
-
-                if (currentCard.getRanks()[UP] == aboveCard.getRanks()[DOWN]) {
-                    if (sameLeft(l, c, c - 1)) {
-                        if (!sameSide) {
-                            aboveCard.setSide(currentCard.getSide());
-                            flipped = true;
-                        }
-                        same = true;
-                    }
-                    if (sameDown(l, c, l + 1)) {
-                        if (!sameSide && !flipped) {
-                            aboveCard.setSide(currentCard.getSide());
-                            flipped = true;
-                        }
-                        same = true;
-                    }
-                    if (sameRight(l, c, c + 1)) {
-                        if (!sameSide && !flipped) {
-                            aboveCard.setSide(currentCard.getSide());
-                        }
-                        same = true;
-                    }
-                    return same;
+        int currentCardSide = matrix[l][c].getSide();
+        List<CardState> sameNeighbors = getSameNeighbors(l, c);
+        if (sameNeighbors.size() >= 2) {
+            boolean flipped = false;
+            for (CardState card: sameNeighbors) {
+                if (card.getSide() != currentCardSide) {
+                    card.setSide(currentCardSide);
+                    flipped = true;
                 }
             }
+            return flipped;
         }
         return false;
     }
 
-    private boolean manageSameLeft(int l, int c, int nc) {
-        if (nc >= 0) {
-            if (matrix[l][nc] != null) {
-                boolean flipped = false;
-                boolean same = false;
-                CardState currentCard = matrix[l][c];
-                CardState leftCard = matrix[l][nc];
-                boolean sameSide = leftCard.getSide() == currentCard.getSide();
-
-                if (currentCard.getRanks()[LEFT] == leftCard.getRanks()[RIGHT]) {
-                    if (sameDown(l, c, l + 1)) {
-                        if (!sameSide) {
-                            leftCard.setSide(currentCard.getSide());
-                            flipped = true;
-                        }
-                    }
-                    if (sameRight(l, c, c + 1)) {
-                        if (!sameSide && !flipped) {
-                            leftCard.setSide(currentCard.getSide());
-                        }
-                    }
-                    return same;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean sameLeft(int l, int c, int nc) {
-        if (nc >= 0) {
-            if (matrix[l][nc] != null) {
-                CardState currentCard = matrix[l][c];
-                CardState leftCard = matrix[l][nc];
-                boolean sameSide = leftCard.getSide() == currentCard.getSide();
-
-                if (currentCard.getRanks()[LEFT] == leftCard.getRanks()[RIGHT]) {
-                    if (!sameSide) {
-                        leftCard.setSide(currentCard.getSide());
-                        return true;
+    private List<CardState> getSameNeighbors(int l, int c) {
+        List<CardState> neighbors = new ArrayList<>();
+        CardState currentCard = matrix[l][c];
+        int j = 2, k = 1;
+        for (int i = -1; i < 2; i += 2) {
+            int nl = l + i;
+            int nc = c + i;
+            if (nl >= 0 && nl <= 2) {
+                if (matrix[nl][c] != null) {
+                    CardState neighbor = matrix[nl][c];
+                    if (currentCard.getRanks()[k + i] == neighbor.getRanks()[j - i]) {
+                        neighbors.add(neighbor);
                     }
                 }
             }
-        }
-        return false;
-    }
-
-    private boolean sameRight(int l, int c, int nc) {
-        if (nc <= 2) {
-            if (matrix[l][nc] != null) {
-                CardState currentCard = matrix[l][c];
-                CardState rightCard = matrix[l][nc];
-                boolean sameSide = rightCard.getSide() == currentCard.getSide();
-
-                if (currentCard.getRanks()[RIGHT] == rightCard.getRanks()[LEFT]) {
-                    if (!sameSide) {
-                        rightCard.setSide(currentCard.getSide());
-                        return true;
+            if (nc >= 0 && nc <= 2) {
+                if (matrix[l][nc] != null) {
+                    CardState neighbor = matrix[l][nc];
+                    if (currentCard.getRanks()[j + i] == neighbor.getRanks()[k - i]) {
+                        neighbors.add(neighbor);
                     }
                 }
             }
+            j--;
+            k++;
         }
-        return false;
-    }
-
-    private boolean manageSameDown(int l, int c, int nl) {
-        if (nl <= 2) {
-            if (matrix[nl][c] != null) {
-                CardState currentCard = matrix[l][c];
-                CardState belowCard = matrix[nl][c];
-                boolean sameSide = belowCard.getSide() == currentCard.getSide();
-
-                if (currentCard.getRanks()[DOWN] == belowCard.getRanks()[UP]) {
-                    if (sameRight(l, c, c + 1)) {
-                        if (!sameSide) {
-                            belowCard.setSide(currentCard.getSide());
-                        }
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean sameDown(int l, int c, int nl) {
-        if (nl <= 2) {
-            if (matrix[nl][c] != null) {
-                CardState currentCard = matrix[l][c];
-                CardState belowCard = matrix[nl][c];
-                boolean sameSide = belowCard.getSide() == currentCard.getSide();
-
-                if (currentCard.getRanks()[DOWN] == belowCard.getRanks()[UP]) {
-                    if (!sameSide) {
-                        belowCard.setSide(currentCard.getSide());
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        return neighbors;
     }
 
     private boolean compareRanks(int l, int c) {
