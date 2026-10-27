@@ -43,13 +43,18 @@ public class CardBuilder {
 
     private int[] parseRanks(String rawRanks) {
         String cleanString = rawRanks.replaceAll("[\"\\[\\]]", "");
+        int[] ranks = new int[4]; // UP, LEFT, RIGHT, DOWN
 
-        String[] parts = cleanString.split(",");
-        int[] ranks = new int[4];
-
-        for (int i = 0; i < parts.length; i++) {
-            String numberPart = parts[i].split(":")[1];
-            ranks[i] = Integer.parseInt(numberPart.trim());
+        for (String part : cleanString.split(",")) {
+            String[] kv = part.split(":");
+            int value = Integer.parseInt(kv[1].trim());
+            switch (kv[0].trim().toUpperCase()) {
+                case "UP"    -> ranks[0] = value;
+                case "LEFT"  -> ranks[1] = value;
+                case "RIGHT" -> ranks[2] = value;
+                case "DOWN"  -> ranks[3] = value;
+                default -> throw new IllegalArgumentException("Lado invalido: " + kv[0]);
+            }
         }
         return ranks;
     }
