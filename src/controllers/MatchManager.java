@@ -32,8 +32,8 @@ public class MatchManager {
     public void startDuel() {
         int cont = 0;
         setup();
-
         gameDisplayer.displayDecks(players);
+        swapCards();
         gameDisplayer.displayGame(new BattleEvent(EventType.STARTED));
 
         do {
@@ -63,6 +63,23 @@ public class MatchManager {
         } while (!battleEngine.isOver());
         int winner = findWinner(players.get(0), players.get(1));
         gameDisplayer.displayGame(new BattleEvent(EventType.FINISHED, winner));
+    }
+
+    private void swapCards() {
+        List<CardState> choices = new ArrayList<>();
+        for (int i = 0; i < players.size(); i++) {
+            gameDisplayer.displayGame(new BattleEvent(EventType.SWAPPING, i));
+            choices.add(Console.swapCards(players.get(1 - i)));
+            gameDisplayer.displayGame(new BattleEvent(EventType.SWAPPED));
+        }
+        CardState toPlayer1 = choices.get(0);
+        CardState toPlayer2 = choices.get(1);
+
+        toPlayer1.setSide(0);
+        toPlayer2.setSide(1);
+
+        players.get(0).setCard(toPlayer2, toPlayer1);
+        players.get(1).setCard(toPlayer1, toPlayer2);
     }
 
     private void setup() {

@@ -11,4 +11,6 @@ public enum EventType {
     PICKINGCARD,
     PICKINGPOSITION,
     FAILED,
+    SWAPPING,
+    SWAPPED,
 }

@@ -8,6 +8,10 @@ import java.util.Scanner;
 public class Console {
     private static final Scanner scanner = new Scanner(System.in);
 
+    public static CardState swapCards(Player player) {
+        return null;
+    }
+
     public void displayMainMenu(){}
     public boolean finishMatch(){ return true; }
     private void createPlayer() {}

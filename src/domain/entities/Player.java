@@ -26,6 +26,13 @@ public class Player {
         this.deck = deck;
     }
 
+    public void setCard(CardState oldCard, CardState newCard) {
+        if (oldCard != null && newCard != null) {
+            this.deck.remove(oldCard);
+            this.deck.add(newCard);
+        }
+    }
+
     public void clearDeck() {
         this.deck.clear();
     }
