@@ -27,12 +27,13 @@ public class BattleEngine {
         if (isFree(position)) {
             matrix[l][c] = card;
             boolean flipped = compareRanks(l, c);
-            boolean ascension = compareElements(card.getElement());
+            boolean ascension = compareElements(card);
             boolean same = manageSame(l, c);
-            BattleEvent[] events = new BattleEvent[2];
+            BattleEvent[] events = new BattleEvent[3];
 
-            if (flipped || same) events[0] = new BattleEvent(EventType.FLIPPED);
-            if (ascension) events[1] = new BattleEvent(EventType.BONUS);
+            events[0] = new BattleEvent(EventType.PLACED, matrix);
+            if (flipped || same) events[1] = new BattleEvent(EventType.FLIPPED);
+            if (ascension) events[2] = new BattleEvent(EventType.BONUS);
             verifyOver();
             return events;
         }
@@ -253,16 +254,19 @@ public class BattleEngine {
         return false;
     }
 
-    private boolean compareElements(ElementType element) {
+    private boolean compareElements(CardState currentCard) {
         boolean applied = false;
         for (CardState[] line : matrix) {
             for (CardState card: line) {
-                if (card != null && card.getElement() == element) {
-                    card.setBonus(); //ascension
-                    applied = true;
+                if (card != null && card.getId() != currentCard.getId()) {
+                    if (card.getElement() == currentCard.getElement()) {
+                        card.setBonus(); //ascension
+                        applied = true;
+                    }
                 }
             }
         }
+        if (applied) currentCard.setBonus();
         return applied;
     }
 
