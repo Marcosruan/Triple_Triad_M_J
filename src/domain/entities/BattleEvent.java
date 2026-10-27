@@ -5,9 +5,9 @@ import domain.enums.EventType;
 public class BattleEvent {
     public EventType type;
     public int side = 0;
-    public int[][] board = {{0,0,0},{0,0,0},{0,0,0}};
+    public CardState[][] board = new CardState[3][3];
 
-    public BattleEvent(EventType type, int[][] board) {
+    public BattleEvent(EventType type, CardState[][] board) {
         this.type = type;
         this.board = board;
     }
