@@ -2,7 +2,6 @@ package application;
 
 import domain.entities.BattleEvent;
 import domain.entities.CardState;
-import domain.enums.ElementType;
 import domain.enums.EventType;
 
 import java.util.Arrays;
@@ -27,8 +26,8 @@ public class BattleEngine {
         if (isFree(position)) {
             matrix[l][c] = card;
             boolean flipped = compareRanks(l, c);
-            boolean ascension = compareElements(card);
             boolean same = manageSame(l, c);
+            boolean ascension = compareElements(card);
             BattleEvent[] events = new BattleEvent[3];
 
             events[0] = new BattleEvent(EventType.PLACED, matrix);
