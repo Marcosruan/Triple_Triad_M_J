@@ -9,10 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BattleEngine {
-    private final int UP = 0;
-    private final int LEFT = 1;
-    private final int RIGHT = 2;
-    private final int DOWN = 3;
 
     private final CardState[][] matrix = new CardState[3][3];
     private boolean over;
@@ -22,10 +18,9 @@ public class BattleEngine {
     }
 
     public BattleEvent[] placeCard(CardState card, int[] position) {
-        int l = position[0];
-        int c = position[1];
-
         if (isFree(position)) {
+            int l = position[0];
+            int c = position[1];
             matrix[l][c] = card;
             boolean flipped = compareRanks(l, c);
             boolean same = manageSame(l, c);
@@ -45,6 +40,41 @@ public class BattleEngine {
         int l = position[0];
         int c = position[1];
         return matrix[l][c] == null;
+    }
+
+    private boolean compareRanks(int l, int c) {
+        boolean flipped = false;
+        CardState currentCard = matrix[l][c];
+        int j = 2, k = 1;
+        for (int i = -1; i < 2; i += 2) {
+            int nl = l + i;
+            int nc = c + i;
+            if (nl >= 0 && nl <= 2) {
+                if (matrix[nl][c] != null) {
+                    CardState neighbor = matrix[nl][c];
+                    if (currentCard.getRanks()[k + i] > neighbor.getRanks()[j - i]) {
+                        if (currentCard.getSide() != neighbor.getSide()) {
+                            neighbor.setSide(currentCard.getSide());
+                            flipped = true;
+                        }
+                    }
+                }
+            }
+            if (nc >= 0 && nc <= 2) {
+                if (matrix[l][nc] != null) {
+                    CardState neighbor = matrix[l][nc];
+                    if (currentCard.getRanks()[j + i] > neighbor.getRanks()[k - i]) {
+                        if (currentCard.getSide() != neighbor.getSide()) {
+                            neighbor.setSide(currentCard.getSide());
+                            flipped = true;
+                        }
+                    }
+                }
+            }
+            j--;
+            k++;
+        }
+        return flipped;
     }
 
     private boolean manageSame(int l, int c) {
@@ -92,74 +122,11 @@ public class BattleEngine {
         return neighbors;
     }
 
-    private boolean compareRanks(int l, int c) {
-        boolean up = compareUp(l, c, l - 1);
-        boolean left = compareLeft(l, c, c - 1);
-        boolean right = compareRight(l, c, c + 1);
-        boolean down = compareDown(l, c, l + 1);
-        return up || left || right || down;
-    }
-
-    private boolean compareDown(int l, int c, int nl) {
-        if (nl <= 2) {
-            if (matrix[nl][c] != null) {
-                boolean greater = matrix[l][c].getRanks()[DOWN] > matrix[nl][c].getRanks()[UP];
-                boolean sameSide = matrix[nl][c].getSide() == matrix[l][c].getSide();
-                if (greater && !sameSide) {
-                    matrix[nl][c].setSide(matrix[l][c].getSide());
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean compareRight(int l, int c, int nc) {
-        if (nc <= 2) {
-            if (matrix[l][nc] != null) {
-                boolean greater = matrix[l][c].getRanks()[RIGHT] > matrix[l][nc].getRanks()[LEFT];
-                boolean sameSide = matrix[l][nc].getSide() == matrix[l][c].getSide();
-                if (greater && !sameSide) {
-                    matrix[l][nc].setSide(matrix[l][c].getSide());
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean compareLeft(int l, int c, int nc) {
-        if (nc >= 0) {
-            if (matrix[l][nc] != null) {
-                boolean greater = matrix[l][c].getRanks()[LEFT] > matrix[l][nc].getRanks()[RIGHT];
-                boolean sameSide = matrix[l][nc].getSide() == matrix[l][c].getSide();
-                if (greater && !sameSide) {
-                    matrix[l][nc].setSide(matrix[l][c].getSide());
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean compareUp(int l, int c, int nl) {
-        if (nl >= 0) {
-            if (matrix[nl][c] != null) {
-                boolean greater = matrix[l][c].getRanks()[UP] > matrix[nl][c].getRanks()[DOWN];
-                boolean sameSide = matrix[nl][c].getSide() == matrix[l][c].getSide();
-                if (greater && !sameSide) {
-                    matrix[nl][c].setSide(matrix[l][c].getSide());
-                    return true;
-                }
-            }        }
-        return false;
-    }
-
     private boolean compareElements(CardState currentCard) {
         boolean applied = false;
         for (CardState[] line : matrix) {
             for (CardState card: line) {
-                if (card != null && card.getId() != currentCard.getId()) {
+                if (card != null && card != currentCard) {
                     if (card.getElement() == currentCard.getElement()) {
                         card.setBonus(); //ascension
                         applied = true;
@@ -194,7 +161,7 @@ public class BattleEngine {
         int cont = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (matrix[i][j].getSide() == side) {
+                if (matrix[i][j] != null && matrix[i][j].getSide() == side) {
                     cont++;
                 }
             }
