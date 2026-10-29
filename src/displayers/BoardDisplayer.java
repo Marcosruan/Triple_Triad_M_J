@@ -27,51 +27,52 @@ public void displayBoard(CardState[][] board) {
 
         printBorder();
 
-        // Nome das cartas
+        // UP: rank na parte superior
         for (int col = 0; col < 3; col++) {
             CardState card = board[row][col];
-            String name = card == null ? "---" : abbreviate(card.getName());
-            printCell(name, card);
+
+            String text = card == null
+                    ? ""
+                    : rank(card.getRanks()[0]);
+
+            printCell(center(text), card);
         }
         System.out.println("|");
 
-        // Ranks UP e LEFT
+     // LEFT, nome e RIGHT
         for (int col = 0; col < 3; col++) {
             CardState card = board[row][col];
-            String text = "";
 
-            if (card != null) {
+            String text;
+
+            if (card == null) {
+                text = center("---");
+            } else {
                 int[] ranks = card.getRanks();
-                text = "U:" + rank(ranks[0]) + " L:" + rank(ranks[1]);
+
+                String left = rank(ranks[1]);
+                String name = abbreviate(card.getName());
+                String right = rank(ranks[2]);
+
+                text = left + " " + center(name, 16) + " " + right;
             }
 
             printCell(text, card);
         }
         System.out.println("|");
 
-        // Ranks RIGHT e DOWN
+     // DOWN: rank na parte inferior
         for (int col = 0; col < 3; col++) {
             CardState card = board[row][col];
-            String text = "";
 
-            if (card != null) {
-                int[] ranks = card.getRanks();
-                text = "R:" + rank(ranks[2]) + " D:" + rank(ranks[3]);
-            }
+            String text = card == null
+                    ? ""
+                    : rank(card.getRanks()[3]);
 
-            printCell(text, card);
+            printCell(center(text), card);
         }
         System.out.println("|");
 
-        // Dono
-        for (int col = 0; col < 3; col++) {
-            CardState card = board[row][col];
-            String text = card == null ? "" : "Jogador " + (card.getSide() + 1);
-            printCell(text, card);
-        }
-        System.out.println("|");
-
-        // Fecha a linha de células
         printBorder();
     }
 }
@@ -96,6 +97,27 @@ public void displayBoard(CardState[][] board) {
 
 	    System.out.print("| " + color + text + RESET + " ");
 	}
+	
+	private String center(String text) {
+		return center(text, CELL_WIDTH);
+	}
+	
+	private String center(String text, int width) {
+	       if (text == null) {
+	           text = "";
+	       }
+
+	       if (text.length() > width) {
+	           text = text.substring(0, width);
+	       }
+
+	       int leftPadding = (width - text.length()) / 2;
+	       int rightPadding = width - text.length() - leftPadding;
+
+	       return " ".repeat(leftPadding)
+	               + text
+	               + " ".repeat(rightPadding);
+	    }
     
     private String fit(String text) {
     	if(text == null) {
