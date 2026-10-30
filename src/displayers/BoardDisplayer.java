@@ -72,6 +72,19 @@ public void displayBoard(CardState[][] board) {
             printCell(center(text), card);
         }
         System.out.println("|");
+        
+     // ELEMENTO
+        for (int col = 0; col < 3; col++) {
+            CardState card = board[row][col];
+
+            String text = card == null
+                    ? ""
+                    : card.getElement().toString();
+
+            printCell(center(text), card);
+        }
+
+        System.out.println("|");
 
         printBorder();
     }
