@@ -14,36 +14,36 @@ public class DeckDisplayer {
     private static final String RED = "\u001B[31m";
     private static final String BLUE = "\u001B[34m";
 
-    public void displayDeck(List<CardState> players) {
+    public void displayDeck(List<CardState> deck) {
 
-        if (players == null || players.isEmpty()) {
+        if (deck == null || deck.isEmpty()) {
             System.out.println("\nO deck está vazio!");
             return;
         }
 
         // Todas as cartas do deck usam a mesma cor.
         // Considera o lado da primeira carta.
-        String color = players.get(0).getSide() == 0 ? RED : BLUE;
+        String color = deck.getFirst().getSide() == 0 ? RED : BLUE;
 
         System.out.println("\n============================== DECK ==============================\n");
 
         // Numeração centralizada sobre cada carta
-        for (int i = 0; i < players.size(); i++) {
+        for (int i = 0; i < deck.size(); i++) {
             printCell("CARTA " + (i + 1), "");
         }
         System.out.println();
 
-        printBorders(players.size());
+        printBorders(deck.size());
 
         // UP
-        for (CardState card : players) {
+        for (CardState card : deck) {
             String text = card == null ? "" : rank(card.getRanks()[0]);
             printCell(text, color);
         }
         System.out.println("|");
 
         // LEFT, NOME e RIGHT
-        for (CardState card : players) {
+        for (CardState card : deck) {
 
             if (card == null) {
                 printCell("---", "");
@@ -61,14 +61,14 @@ public class DeckDisplayer {
         System.out.println("|");
 
         // DOWN
-        for (CardState card : players) {
+        for (CardState card : deck) {
             String text = card == null ? "" : rank(card.getRanks()[3]);
             printCell(text, color);
         }
         System.out.println("|");
 
         // ELEMENTO
-        for (CardState card : players) {
+        for (CardState card : deck) {
             String element = card == null
                     ? ""
                     : card.getElement().toString();
@@ -77,7 +77,7 @@ public class DeckDisplayer {
         }
         System.out.println("|");
 
-        printBorders(players.size());
+        printBorders(deck.size());
 
         System.out.println("\n==================================================================");
     }
