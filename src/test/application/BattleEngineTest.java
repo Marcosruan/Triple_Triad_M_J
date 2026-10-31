@@ -1,8 +1,10 @@
 
-package application;
+package test.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import application.BattleEngine;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,9 +38,9 @@ public class BattleEngineTest {
 
         BattleEvent[] events = engine.placeCard(card, new int[]{1, 1});
 
-        assertEquals(EventType.PLACED, events[0].type);
-        assertEquals(1, engine.getPoints(0));
-        assertEquals(0, engine.getPoints(1));
+        Assertions.assertEquals(EventType.PLACED, events[0].type);
+        Assertions.assertEquals(1, engine.getPoints(0));
+        Assertions.assertEquals(0, engine.getPoints(1));
     }
 
     @Test
@@ -57,10 +59,10 @@ public class BattleEngineTest {
 
         BattleEvent[] events = engine.placeCard(secondCard, new int[]{1, 1});
 
-        assertEquals(1, events.length);
-        assertEquals(EventType.FAILED, events[0].type);
-        assertEquals(1, engine.getPoints(0));
-        assertEquals(0, engine.getPoints(1));
+        Assertions.assertEquals(1, events.length);
+        Assertions.assertEquals(EventType.FAILED, events[0].type);
+        Assertions.assertEquals(1, engine.getPoints(0));
+        Assertions.assertEquals(0, engine.getPoints(1));
     }
 
     @Test
@@ -92,7 +94,7 @@ public class BattleEngineTest {
         engine.placeCard(enemyCard, new int[]{0, 1});
         engine.placeCard(myCard, new int[]{1, 1});
 
-        assertEquals(0, enemyCard.getSide());
+        Assertions.assertEquals(0, enemyCard.getSide());
     }
 
     @Test
@@ -110,7 +112,7 @@ public class BattleEngineTest {
         engine.placeCard(enemyCard, new int[]{2, 1});
         engine.placeCard(myCard, new int[]{1, 1});
 
-        assertEquals(0, enemyCard.getSide());
+        Assertions.assertEquals(0, enemyCard.getSide());
     }
     
     @Test
@@ -128,7 +130,7 @@ public class BattleEngineTest {
         engine.placeCard(cartaAdversaria, new int[]{1, 0});
         engine.placeCard(minhaCarta, new int[]{1, 1});
 
-        assertEquals(0, cartaAdversaria.getSide());
+        Assertions.assertEquals(0, cartaAdversaria.getSide());
     }
     
     @Test
@@ -146,7 +148,7 @@ public class BattleEngineTest {
         engine.placeCard(cartaAdversaria, new int[]{1, 2});
         engine.placeCard(minhaCarta, new int[]{1, 1});
 
-        assertEquals(0, cartaAdversaria.getSide());
+        Assertions.assertEquals(0, cartaAdversaria.getSide());
     }
     
     @Test
@@ -170,8 +172,8 @@ public class BattleEngineTest {
         engine.placeCard(cartaEsquerda, new int[]{1, 0});
         engine.placeCard(minhaCarta, new int[]{1, 1});
 
-        assertEquals(0, cartaCima.getSide());
-        assertEquals(0, cartaEsquerda.getSide());
+        Assertions.assertEquals(0, cartaCima.getSide());
+        Assertions.assertEquals(0, cartaEsquerda.getSide());
     }
     
     @Test
@@ -195,8 +197,8 @@ public class BattleEngineTest {
         engine.placeCard(cartaEsquerda, new int[]{1, 0});
         engine.placeCard(minhaCarta, new int[]{1, 1});
 
-        assertEquals(1, cartaCima.getSide());
-        assertEquals(1, cartaEsquerda.getSide());
+        Assertions.assertEquals(1, cartaCima.getSide());
+        Assertions.assertEquals(1, cartaEsquerda.getSide());
     }
     
     @Test
@@ -305,8 +307,8 @@ public class BattleEngineTest {
         engine.clear();
 
         assertFalse(engine.isOver());
-        assertEquals(0, engine.getPoints(0));
-        assertEquals(0, engine.getPoints(1));
+        Assertions.assertEquals(0, engine.getPoints(0));
+        Assertions.assertEquals(0, engine.getPoints(1));
         assertTrue(engine.isFree(new int[]{0, 0}));
     }
     
@@ -337,8 +339,8 @@ public class BattleEngineTest {
         engine.placeCard(carta3, new int[]{2, 0});
         engine.placeCard(carta4, new int[]{2, 2});
 
-        assertEquals(2, engine.getPoints(0));
-        assertEquals(2, engine.getPoints(1));
+        Assertions.assertEquals(2, engine.getPoints(0));
+        Assertions.assertEquals(2, engine.getPoints(1));
     }
     
     @Test
@@ -356,7 +358,7 @@ public class BattleEngineTest {
         engine.placeCard(cartaAdversaria, new int[]{0, 1});
         engine.placeCard(minhaCarta, new int[]{1, 1});
 
-        assertEquals(1, cartaAdversaria.getSide());
+        Assertions.assertEquals(1, cartaAdversaria.getSide());
     }
     
     @Test
@@ -374,7 +376,7 @@ public class BattleEngineTest {
         engine.placeCard(cartaAdversaria, new int[]{0, 1});
         engine.placeCard(minhaCarta, new int[]{1, 1});
 
-        assertEquals(1, cartaAdversaria.getSide());
+        Assertions.assertEquals(1, cartaAdversaria.getSide());
     }
     
     @Test
@@ -392,6 +394,6 @@ public class BattleEngineTest {
         engine.placeCard(primeiraCarta, new int[]{0, 1});
         engine.placeCard(segundaCarta, new int[]{1, 1});
 
-        assertEquals(0, primeiraCarta.getSide());
+        Assertions.assertEquals(0, primeiraCarta.getSide());
     }
 }
