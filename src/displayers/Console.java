@@ -18,15 +18,13 @@ public class Console {
     public static CardState swapCards(Player player) {
     	DeckDisplayer deckDisplayer = new DeckDisplayer();
 
-        while (true) {
-            System.out.println("\n" + player.getName() + ", escolha uma carta para trocar:");
+        System.out.println("\n" + player.getName() + ", escolha uma carta para trocar:");
 
-            deckDisplayer.displayDeck(player.getDeck());
+        deckDisplayer.displayDeck(player.getDeck());
 
-            int option = lerNumero("Escolha uma carta (1 a " + player.getDeck().size() + "):", 1, player.getDeck().size());
+        int option = lerNumero("Escolha uma carta (1 a " + player.getDeck().size() + "):", 1, player.getDeck().size());
 
-            return player.getDeck().get(option - 1);
-        }
+        return player.getDeck().get(option - 1);
     }
 
     public void displayMainMenu() {
@@ -55,11 +53,9 @@ public class Console {
                         players
                     );
 
-                    matchManager.startDuel();
-
-                    while (finishMatch()) {
+                    do {
                         matchManager.startDuel();
-                    }
+                    } while (finishMatch());
                     break;
 
                 case 2:
@@ -74,19 +70,13 @@ public class Console {
     }
     
     public boolean finishMatch(){
-    	while (true) {
-            System.out.println("\nDesejam jogar novamente?");
-            System.out.println("1 - Sim");
-            System.out.println("2 - Não");
+        System.out.println("\nDesejam jogar novamente?");
+        System.out.println("1 - Sim");
+        System.out.println("2 - Não");
 
-            int option = lerNumero("Escolha uma opção:", 1, 2);
+        int option = lerNumero("Escolha uma opção:", 1, 2);
 
-            if (option == 1) {
-                return true;
-            }
-
-            return false;
-        } 
+        return option == 1;
     }
     
     private Player createPlayer() {
@@ -100,7 +90,7 @@ public class Console {
             }
 
             try {
-                return new Player(nome, new java.util.ArrayList<CardState>());
+                return new Player(nome);
             } catch (IllegalArgumentException e) {
                 System.out.println("Nome invalido. Tente novamente.");
             }
@@ -120,13 +110,11 @@ public class Console {
     public static CardState selectCard(Player player) { 
     	DeckDisplayer deckDisplayer = new DeckDisplayer();
 
-        while (true) {
-            deckDisplayer.displayDeck(player.getDeck());
+        deckDisplayer.displayDeck(player.getDeck());
 
-            int option = lerNumero("Escolha uma carta (1 a " + player.getDeck().size() + "):", 1, player.getDeck().size());
+        int option = lerNumero("Escolha uma carta (1 a " + player.getDeck().size() + "):", 1, player.getDeck().size());
 
-            return player.getDeck().get(option - 1);
-        } 
+        return player.getDeck().get(option - 1);
     }
     
 
