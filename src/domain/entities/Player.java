@@ -1,16 +1,15 @@
 package domain.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private String name;
-    private List<CardState> deck;
+    private final String name;
+    private List<CardState> deck = new ArrayList<>();
 
-    public Player(String name, List<CardState> deck) {
+    public Player(String name) {
         validateName(name);
-        validateDeck(deck);
         this.name = name;
-        this.deck = deck;
     }
 
     public String getName() {
