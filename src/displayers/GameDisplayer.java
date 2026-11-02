@@ -1,16 +1,17 @@
 
 package displayers;
 
+import java.util.Arrays;
 import java.util.List;
-
 import domain.entities.BattleEvent;
+import domain.entities.CardState;
 import domain.entities.Player;
-import domain.enums.EventType;
 
 public class GameDisplayer {
 
     private final BoardDisplayer boardDisplayer;
     private final DeckDisplayer deckDisplayer;
+    private CardState[][] board = new CardState[3][3];
 
     public GameDisplayer() {
         this.boardDisplayer = new BoardDisplayer();
@@ -31,6 +32,7 @@ public class GameDisplayer {
 
             case PLACED:
                 System.out.println("\nCarta posicionada!");
+                board = event.board;
                 boardDisplayer.displayBoard(event.board);
                 break;
 
@@ -44,7 +46,7 @@ public class GameDisplayer {
 
             case PICKINGPOSITION:
                 System.out.println("\nEscolha uma posição no tabuleiro.");
-                boardDisplayer.displayBoard(event.board);
+                boardDisplayer.displayBoard(board);
                 break;
 
             case PICKEDPOSITION:
@@ -53,12 +55,10 @@ public class GameDisplayer {
 
             case FLIPPED:
                 System.out.println("\nUma ou mais cartas foram viradas!");
-                boardDisplayer.displayBoard(event.board);
                 break;
 
             case BONUS:
                 System.out.println("\nBônus elemental! Os ranks receberam +1.");
-                boardDisplayer.displayBoard(event.board);
                 break;
 
             case FAILED:
@@ -66,6 +66,9 @@ public class GameDisplayer {
                 break;
 
             case FINISHED:
+                for (CardState[] line : board) {
+                    Arrays.fill(line, null);
+                }
                 System.out.println("\n===== FIM DE PARTIDA =====");
 
                 if (event.side == 0) {
