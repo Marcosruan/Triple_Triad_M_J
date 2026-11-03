@@ -6,15 +6,19 @@ import domain.entities.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import application.BattleEngine;
-import builders.CardBuilder;
 import controllers.MatchManager;
 
 import java.util.Scanner;
 
 public class Console {
     private static final Scanner scanner = new Scanner(System.in);
-    private final HistoryDisplayer historyDisplayer = new HistoryDisplayer();
+    private final MatchManager matchManager;
+    private final HistoryDisplayer historyDisplayer;
+    
+    public Console(MatchManager matchManager, HistoryDisplayer historyDisplayer) {
+        this.matchManager = matchManager;
+        this.historyDisplayer = historyDisplayer;
+    }
 
     public static CardState swapCards(Player player) {
     	DeckDisplayer deckDisplayer = new DeckDisplayer();
@@ -47,12 +51,12 @@ public class Console {
                     System.out.println("\n===== JOGADOR 2 =====");
                     players.add(createPlayer());
 
-                    MatchManager matchManager = new MatchManager( new GameDisplayer(), new CardBuilder(), new BattleEngine(),
-                        players, historyDisplayer);
+                    matchManager.changePlayers(players);
 
                     do {
                         matchManager.startDuel();
                     } while (finishMatch());
+
                     break;
 
                 case 2:
