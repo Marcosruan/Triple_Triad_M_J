@@ -5,7 +5,7 @@ public enum EventType {
     PLACED,
     FLIPPED,
     FINISHED,
-    BONUS,
+    ASCENSION,
     PICKEDCARD,
     PICKEDPOSITION,
     PICKINGCARD,
