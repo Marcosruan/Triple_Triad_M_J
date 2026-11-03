@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// Classe feita pelo Gemini
 public class CardBuilder {
 
     public List<Card> loadCards(String filePath) {
