@@ -88,7 +88,7 @@ public class MatchManager {
     }
 
     private void setup() {
-        buildCards();
+        if (cards.isEmpty()) buildCards();
         battleEngine.clear();
 
         players.get(0).clearDeck();
