@@ -57,7 +57,7 @@ public class GameDisplayer {
                 System.out.println("\nUma ou mais cartas foram viradas!");
                 break;
 
-            case BONUS:
+            case ASCENSION:
                 System.out.println("\nBônus elemental! Os ranks receberam +1.");
                 break;
 

@@ -29,7 +29,7 @@ public class BattleEngine {
 
             events[0] = new BattleEvent(EventType.PLACED, matrix);
             if (flipped || same) events[1] = new BattleEvent(EventType.FLIPPED);
-            if (ascension) events[2] = new BattleEvent(EventType.BONUS);
+            if (ascension) events[2] = new BattleEvent(EventType.ASCENSION);
             verifyOver();
             return events;
         }
