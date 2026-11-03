@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 public class Console {
     private static final Scanner scanner = new Scanner(System.in);
+    private final HistoryDisplayer historyDisplayer = new HistoryDisplayer();
 
     public static CardState swapCards(Player player) {
     	DeckDisplayer deckDisplayer = new DeckDisplayer();
@@ -46,12 +47,8 @@ public class Console {
                     System.out.println("\n===== JOGADOR 2 =====");
                     players.add(createPlayer());
 
-                    MatchManager matchManager = new MatchManager(
-                        new GameDisplayer(),
-                        new CardBuilder(),
-                        new BattleEngine(),
-                        players
-                    );
+                    MatchManager matchManager = new MatchManager( new GameDisplayer(), new CardBuilder(), new BattleEngine(),
+                        players, historyDisplayer);
 
                     do {
                         matchManager.startDuel();
@@ -97,8 +94,9 @@ public class Console {
         }
     }
 
-    private void displayHistory() {}
-    private void updateHistory() {}
+    private void displayHistory() {
+        historyDisplayer.displayHistory();
+    }
 
     public static int[] selectPlacementPosition(){
     	int row = lerNumero("Escolha a linha (1 a 3):", 1, 3);
