@@ -10,6 +10,7 @@ import domain.enums.EventType;
 import builders.CardBuilder;
 import displayers.Console;
 import displayers.GameDisplayer;
+import displayers.HistoryDisplayer;
 
 import java.util.*;
 
@@ -21,12 +22,15 @@ public class MatchManager {
     private final CardBuilder cardBuilder;
     private final BattleEngine battleEngine;
     private final GameDisplayer gameDisplayer;
+    private final HistoryDisplayer historyDisplayer;
 
-    public MatchManager(GameDisplayer gameDisplayer, CardBuilder cardBuilder, BattleEngine battleEngine, List<Player> players) {
+    public MatchManager(GameDisplayer gameDisplayer, CardBuilder cardBuilder, BattleEngine battleEngine, List<Player> players,
+    		HistoryDisplayer historyDisplayer) {
         this.gameDisplayer = gameDisplayer;
         this.cardBuilder = cardBuilder;
         this.battleEngine = battleEngine;
         this.players = players;
+		this.historyDisplayer = historyDisplayer;
     }
 
     public void startDuel() {
@@ -63,6 +67,7 @@ public class MatchManager {
         } while (!battleEngine.isOver());
         int winner = findWinner(players.get(0), players.get(1));
         gameDisplayer.displayGame(new BattleEvent(EventType.FINISHED, winner));
+        historyDisplayer.addMatch(players.get(0), players.get(1), winner);
     }
 
     private void swapCards() {
